@@ -1,4 +1,4 @@
--- Обновление таблицы пользователей
+
 ALTER TABLE users
   ADD COLUMN IF NOT EXISTS avatar VARCHAR(255),
   ADD COLUMN IF NOT EXISTS position VARCHAR(255),
@@ -7,7 +7,7 @@ ALTER TABLE users
   ADD COLUMN IF NOT EXISTS created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   ADD COLUMN IF NOT EXISTS updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
 
--- Обновление таблицы туров
+
 ALTER TABLE tours
   ADD COLUMN IF NOT EXISTS image VARCHAR(255),
   ADD COLUMN IF NOT EXISTS total_slots INTEGER NOT NULL DEFAULT 10,
@@ -15,13 +15,13 @@ ALTER TABLE tours
   ADD COLUMN IF NOT EXISTS created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   ADD COLUMN IF NOT EXISTS updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
 
--- Обновление таблицы заказов
+
 ALTER TABLE orders
   ADD COLUMN IF NOT EXISTS notes TEXT,
   ADD COLUMN IF NOT EXISTS created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   ADD COLUMN IF NOT EXISTS updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
 
--- Создание или обновление триггеров
+
 CREATE OR REPLACE FUNCTION update_updated_at_column()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -48,7 +48,7 @@ CREATE TRIGGER update_orders_updated_at
   FOR EACH ROW
   EXECUTE FUNCTION update_updated_at_column();
 
--- Обновление индексов
+
 CREATE INDEX IF NOT EXISTS idx_tours_guide_id ON tours(guide_id);
 CREATE INDEX IF NOT EXISTS idx_orders_user_id ON orders(user_id);
 CREATE INDEX IF NOT EXISTS idx_orders_tour_id ON orders(tour_id);

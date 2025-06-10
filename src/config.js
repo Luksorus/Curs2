@@ -1,9 +1,9 @@
-// Используем относительные пути для API
+
 const API_BASE_URL = '';
 
 export const config = {
   apiUrl: API_BASE_URL,
-  imageUrl: 'http://localhost:3002', // Оставляем абсолютный путь для изображений
+  imageUrl: 'http://localhost:3002', 
   endpoints: {
     auth: {
       login: '/api/auth/login',

@@ -1,10 +1,10 @@
--- Удаление существующих таблиц
+
 DROP TABLE IF EXISTS order_tours CASCADE;
 DROP TABLE IF EXISTS orders CASCADE;
 DROP TABLE IF EXISTS tours CASCADE;
 DROP TABLE IF EXISTS users CASCADE;
 
--- Создание таблицы пользователей
+
 CREATE TABLE users (
   id SERIAL PRIMARY KEY,
   name VARCHAR(255),
@@ -19,7 +19,7 @@ CREATE TABLE users (
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Создание таблицы туров
+
 CREATE TABLE tours (
   id SERIAL PRIMARY KEY,
   name VARCHAR(255) NOT NULL,
@@ -38,7 +38,7 @@ CREATE TABLE tours (
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Создание таблицы заказов
+
 CREATE TABLE orders (
   id SERIAL PRIMARY KEY,
   user_id INTEGER REFERENCES users(id) NOT NULL,
@@ -50,7 +50,7 @@ CREATE TABLE orders (
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Создание таблицы тур-заказ
+
 CREATE TABLE order_tours (
   id SERIAL PRIMARY KEY,
   order_id INTEGER REFERENCES orders(id),
@@ -59,7 +59,7 @@ CREATE TABLE order_tours (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Создание индексов
+
 CREATE INDEX idx_tours_guide_id ON tours(guide_id);
 CREATE INDEX idx_orders_user_id ON orders(user_id);
 CREATE INDEX idx_orders_tour_id ON orders(tour_id);
@@ -67,7 +67,7 @@ CREATE INDEX idx_orders_status ON orders(status);
 CREATE INDEX idx_order_tours_order_id ON order_tours(order_id);
 CREATE INDEX idx_order_tours_tour_id ON order_tours(tour_id);
 
--- Добавление внешних ключей
+
 ALTER TABLE tours 
   ADD CONSTRAINT fk_tours_guide 
   FOREIGN KEY (guide_id) 
@@ -98,7 +98,7 @@ ALTER TABLE order_tours
   REFERENCES tours(id) 
   ON DELETE CASCADE;
 
--- Создание функции для автоматического обновления updated_at
+
 CREATE OR REPLACE FUNCTION update_updated_at_column()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -107,7 +107,7 @@ BEGIN
 END;
 $$ language 'plpgsql';
 
--- Создание триггеров для обновления updated_at
+
 CREATE TRIGGER update_users_updated_at
   BEFORE UPDATE ON users
   FOR EACH ROW
@@ -123,7 +123,7 @@ CREATE TRIGGER update_orders_updated_at
   FOR EACH ROW
   EXECUTE FUNCTION update_updated_at_column();
 
--- Создание базовых администраторов
+
 INSERT INTO users (name, email, password, role) VALUES
 ('Admin', 'admin@example.com', '$2b$10$rR3CQkxQPFKH8.OG/FZKVeAGz8KZbHUYNf3XQwMwzYA4P4z6UAOxq', 'admin'),
 ('Guide 1', 'guide1@example.com', '$2b$10$rR3CQkxQPFKH8.OG/FZKVeAGz8KZbHUYNf3XQwMwzYA4P4z6UAOxq', 'guide'),

@@ -116,7 +116,7 @@ const UserManagement = () => {
   const handleRoleChange = async (userId, newRole) => {
     try {
       await api.patch(`/api/users/${userId}/role`, { role: newRole });
-      fetchUsers(); // Обновляем список пользователей
+      fetchUsers(); 
       setError(null);
     } catch (err) {
       setError('Ошибка при обновлении роли пользователя');
@@ -131,7 +131,7 @@ const UserManagement = () => {
 
     try {
       await api.delete(`/api/users/${userId}`);
-      fetchUsers(); // Обновляем список пользователей
+      fetchUsers();     
       setError(null);
     } catch (err) {
       setError('Ошибка при удалении пользователя');

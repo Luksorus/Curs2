@@ -8,6 +8,12 @@ import api from '../../api/axios';
 const Container = styled.div`
   max-width: 1200px;
   margin: 0 auto;
+  padding: 2rem;
+
+  @media (max-width: 768px) {
+    padding: 1rem;
+    overflow-x: auto;
+  }
 `;
 
 const Header = styled.div`
@@ -93,6 +99,7 @@ const Button = styled.button`
     padding: 0.75rem 1rem;
     font-size: 1rem;
     justify-content: center;
+    width: 100%;
   }
 `;
 
@@ -107,6 +114,7 @@ const Modal = styled.div`
   justify-content: center;
   align-items: center;
   z-index: 1000;
+  padding: 1rem;
 `;
 
 const ModalContent = styled.div`
@@ -119,6 +127,11 @@ const ModalContent = styled.div`
   max-height: 90vh;
   overflow-y: auto;
 
+  @media (max-width: 768px) {
+    padding: 1.5rem;
+    width: 95%;
+  }
+
   h2 {
     color: ${theme.colors.text};
     margin-bottom: 1.5rem;
@@ -129,6 +142,10 @@ const ModalContent = styled.div`
 const Form = styled.form`
   display: grid;
   gap: 1.5rem;
+
+  @media (max-width: 768px) {
+    gap: 1rem;
+  }
 `;
 
 const FormGroup = styled.div`
@@ -159,6 +176,13 @@ const FormGroup = styled.div`
     min-height: 100px;
     resize: vertical;
   }
+
+  @media (max-width: 768px) {
+    input, select, textarea {
+      padding: 0.6rem;
+      font-size: 0.95rem;
+    }
+  }
 `;
 
 const ButtonGroup = styled.div`
@@ -167,17 +191,12 @@ const ButtonGroup = styled.div`
   justify-content: flex-end;
   margin-top: 1rem;
 
-  @media (max-width: 1024px) {
-    gap: 0.75rem;
-  }
-
   @media (max-width: 768px) {
     flex-direction: column;
-    width: 100%;
+    gap: 0.5rem;
     
     button {
       width: 100%;
-      justify-content: center;
     }
   }
 `;
@@ -197,6 +216,8 @@ const TourCard = styled.div`
 
   @media (max-width: 768px) {
     padding: 1rem;
+    margin-bottom: 1rem;
+    min-width: 800px;
   }
 `;
 
@@ -208,6 +229,7 @@ const TourGrid = styled.div`
 
   @media (max-width: 1024px) {
     gap: 1.5rem;
+    grid-template-columns: auto 1fr;
   }
 
   @media (max-width: 768px) {
@@ -218,14 +240,15 @@ const TourGrid = styled.div`
 `;
 
 const TourImage = styled.img`
-  width: 100px;
-  height: 100px;
+  width: 120px;
+  height: 120px;
   object-fit: cover;
   border-radius: ${theme.borderRadius.medium};
+  flex-shrink: 0;
 
   @media (max-width: 768px) {
-    width: 150px;
-    height: 150px;
+    width: 100%;
+    height: 200px;
     margin: 0 auto;
   }
 `;
@@ -234,15 +257,29 @@ const TourInfo = styled.div`
   h3 {
     color: ${theme.colors.text};
     margin: 0 0 0.5rem 0;
+    font-size: 1.2rem;
   }
 
   p {
     color: ${theme.colors.textLight};
-    margin: 0;
+    margin: 0.25rem 0;
+    font-size: 0.95rem;
+  }
+
+  .price {
+    color: ${theme.colors.primary};
+    font-weight: 500;
+    font-size: 1.1rem;
+    margin-top: 0.5rem;
   }
 
   @media (max-width: 768px) {
+    text-align: center;
     margin: 1rem 0;
+
+    h3 {
+      font-size: 1.3rem;
+    }
   }
 `;
 
@@ -294,6 +331,7 @@ const TourManagement = () => {
     distance: '',
     price: '',
     location: '',
+    guide_id: '',
     total_slots: 10,
     available_slots: 10,
     image: null
@@ -345,7 +383,7 @@ const TourManagement = () => {
   }, [fetchGuides, fetchTours]);
 
   useEffect(() => {
-    // Очищаем URL объекта при размонтировании компонента
+
     return () => {
       if (previewUrl) URL.revokeObjectURL(previewUrl);
       if (editingPreviewUrl) URL.revokeObjectURL(editingPreviewUrl);
@@ -441,12 +479,18 @@ const TourManagement = () => {
 
       if (editingTour) {
         await axios.put(`${config.apiUrl}/api/tours/${editingTour.id}`, formDataToSend, {
-          headers: { 'Content-Type': 'multipart/form-data' }
+          headers: { 
+            ...getAuthHeader().headers,
+            'Content-Type': 'multipart/form-data' 
+          }
         });
         setSuccess('Тур успешно обновлен');
       } else {
         await axios.post(`${config.apiUrl}/api/tours`, formDataToSend, {
-          headers: { 'Content-Type': 'multipart/form-data' }
+          headers: { 
+            ...getAuthHeader().headers,
+            'Content-Type': 'multipart/form-data' 
+          }
         });
         setSuccess('Тур успешно создан');
       }
@@ -463,7 +507,7 @@ const TourManagement = () => {
     if (tour) {
       setFormData({
         ...tour,
-        image: null // Сбрасываем файл изображения
+        image: null 
       });
       setEditingTour(tour);
     } else {
@@ -475,6 +519,7 @@ const TourManagement = () => {
         distance: '',
         price: '',
         location: '',
+        guide_id: '',
         total_slots: 10,
         available_slots: 10,
         image: null
@@ -495,6 +540,7 @@ const TourManagement = () => {
       distance: '',
       price: '',
       location: '',
+      guide_id: '',
       total_slots: 10,
       available_slots: 10,
       image: null
@@ -645,6 +691,22 @@ const TourManagement = () => {
                   onChange={handleInputChange}
                   required
                 />
+              </FormGroup>
+              <FormGroup>
+                <label>Гид</label>
+                <select
+                  name="guide_id"
+                  value={formData.guide_id || ''}
+                  onChange={handleInputChange}
+                  required
+                >
+                  <option value="">Выберите гида</option>
+                  {guides.map(guide => (
+                    <option key={guide.id} value={guide.id}>
+                      {guide.name} - {guide.position || 'Гид'}
+                    </option>
+                  ))}
+                </select>
               </FormGroup>
               <FormGroup>
                 <label>Размер группы</label>

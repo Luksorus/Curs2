@@ -15,19 +15,19 @@ const Cart = () => {
       setIsLoading(true);
       setError(null);
 
-      // Проверяем авторизацию
+      
       if (!isAuthenticated) {
         navigate('/login', { state: { from: '/cart' } });
         return;
       }
 
-      // Получаем токен из localStorage
+     
       const token = localStorage.getItem('token');
       if (!token) {
         throw new Error('Не найден токен авторизации');
       }
 
-      // Создаем массив заказов для каждого тура
+      
       const orderPromises = cartItems.map(async (item) => {
         const orderData = {
           tour_id: item.tour.id,
@@ -35,21 +35,13 @@ const Cart = () => {
           total_price: item.tour.price * item.quantity
         };
 
-        // Отправляем запрос на создание заказа с правильным путем /api/orders
+        
         const response = await api.post('/api/orders', orderData);
         return response.data;
       });
-
-      // Ждем выполнения всех заказов
       await Promise.all(orderPromises);
-
-      // Очищаем корзину после успешного оформления
       clearCart();
-      
-      // Показываем сообщение об успехе
       setSuccessMessage('Заказ успешно оформлен!');
-      
-      // Перенаправляем на страницу профиля через 2 секунды
       setTimeout(() => {
         navigate('/profile');
       }, 2000);
@@ -64,7 +56,7 @@ const Cart = () => {
 
   return (
     <div>
-      {/* Render your component content here */}
+      {}
     </div>
   );
 };

@@ -176,7 +176,7 @@ const Auth = () => {
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      // Проверяем тип файла
+      
       const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
       if (!allowedTypes.includes(file.type)) {
         alert('Пожалуйста, выберите изображение в формате JPEG, PNG или GIF');
@@ -184,7 +184,7 @@ const Auth = () => {
         return;
       }
 
-      // Проверяем размер файла (5MB)
+      
       if (file.size > 5 * 1024 * 1024) {
         alert('Размер файла не должен превышать 5MB');
         e.target.value = '';
@@ -209,13 +209,13 @@ const Auth = () => {
           navigate('/profile');
         }
       } else {
-        // Создаем FormData для отправки файла
+        
         const registerData = new FormData();
         registerData.append('name', formData.name);
         registerData.append('email', formData.email);
         registerData.append('password', formData.password);
         
-        // Добавляем файл только если он был выбран
+        
         if (selectedFile) {
           registerData.append('avatar', selectedFile);
         }

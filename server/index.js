@@ -10,7 +10,7 @@ const fs = require('fs');
 const pool = require('./db');
 require('dotenv').config();
 
-// Import routes
+
 const authRoutes = require('./routes/auth');
 const toursRoutes = require('./routes/tours');
 const ordersRoutes = require('./routes/orders');
@@ -18,7 +18,7 @@ const usersRoutes = require('./routes/users');
 
 const app = express();
 
-// Use cors middleware with proper configuration
+
 app.use(cors({
   origin: ['http://localhost:5173', 'http://localhost:5174', 'http://localhost:3000'],
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
@@ -26,14 +26,14 @@ app.use(cors({
   credentials: true
 }));
 
-// Configure multer for file upload
+
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     const uploadPath = file.fieldname === 'avatar' 
       ? path.join(__dirname, 'public', 'images', 'avatars')
       : path.join(__dirname, 'public', 'images', 'tours');
     
-    // Создаем директорию, если она не существует
+    
     if (!fs.existsSync(uploadPath)) {
       fs.mkdirSync(uploadPath, { recursive: true });
     }
@@ -49,7 +49,7 @@ const storage = multer.diskStorage({
 const upload = multer({
   storage: storage,
   limits: {
-    fileSize: 5 * 1024 * 1024 // 5MB limit
+    fileSize: 5 * 1024 * 1024 
   },
   fileFilter: function (req, file, cb) {
     const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
@@ -66,17 +66,17 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(securityMiddleware);
 
-// Serve static files
+
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/images', express.static(path.join(__dirname, 'public', 'images')));
 
-// Routes
+
 app.use('/api/auth', authRoutes);
 app.use('/api/tours', toursRoutes);
 app.use('/api/orders', ordersRoutes);
 app.use('/api/users', usersRoutes);
 
-// Middleware для проверки JWT
+
 const authenticateToken = (req, res, next) => {
   console.log('Auth headers:', req.headers);
   const authHeader = req.headers['authorization'];
@@ -97,7 +97,7 @@ const authenticateToken = (req, res, next) => {
   });
 };
 
-// Обновляем middleware для проверки прав администратора
+
 const isAdmin = (req, res, next) => {
   if (req.user.role !== 'admin') {
     return res.status(403).json({ message: 'Требуются права администратора' });
@@ -105,7 +105,7 @@ const isAdmin = (req, res, next) => {
   next();
 };
 
-// Middleware для проверки прав руководителя туров
+
 const isGuide = (req, res, next) => {
   if (req.user.role !== 'guide' && req.user.role !== 'admin') {
     return res.status(403).json({ message: 'Требуются права руководителя туров' });
@@ -113,12 +113,12 @@ const isGuide = (req, res, next) => {
   next();
 };
 
-// Обновляем маршрут регистрации
+
 app.post('/api/auth/register', upload.single('avatar'), async (req, res) => {
   try {
     const { name, email, password, role } = req.body;
     
-    // Проверяем, существует ли пользователь
+
     const userExists = await pool.query(
       'SELECT * FROM users WHERE email = $1',
       [email]
@@ -128,16 +128,16 @@ app.post('/api/auth/register', upload.single('avatar'), async (req, res) => {
       return res.status(400).json({ message: 'Пользователь уже существует' });
     }
 
-    // Хешируем пароль
+
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Получаем путь к аватару, если файл был загружен
+
     const avatarPath = req.file ? `/images/avatars/${req.file.filename}` : null;
 
-    // Устанавливаем роль (только админ может создавать руководителей туров)
+
     const userRole = role === 'guide' ? 'user' : (role || 'user');
 
-    // Создаем пользователя
+
     const result = await pool.query(
       'INSERT INTO users (name, email, password, avatar, role) VALUES ($1, $2, $3, $4, $5) RETURNING id, name, email, avatar, role',
       [name, email, hashedPassword, avatarPath, userRole]
@@ -168,7 +168,7 @@ app.post('/api/auth/register', upload.single('avatar'), async (req, res) => {
   }
 });
 
-// Маршруты для туров
+
 app.get('/api/tours', async (req, res) => {
   try {
     const { search, difficulty, minPrice, maxPrice } = req.query;
@@ -242,12 +242,12 @@ app.put('/api/tours/:id', authenticateToken, isAdmin, upload.single('image'), as
       guide_id,
     } = req.body;
 
-    // Если загружено новое изображение, обновляем путь
+
     let imagePath = null;
     if (req.file) {
       imagePath = `/images/tours/${req.file.filename}`;
       
-      // Получаем старое изображение для удаления
+
       const oldImage = await pool.query('SELECT image FROM tours WHERE id = $1', [id]);
       if (oldImage.rows[0]?.image) {
         const oldImagePath = path.join(__dirname, 'public', oldImage.rows[0].image);
@@ -289,25 +289,25 @@ app.delete('/api/tours/:id', authenticateToken, isAdmin, async (req, res) => {
   }
 });
 
-// Маршруты для заказов
+
 app.post('/api/orders', authenticateToken, async (req, res) => {
   try {
     const { items } = req.body;
     const userId = req.user.id;
 
-    // Начинаем транзакцию
+
     const client = await pool.connect();
     try {
       await client.query('BEGIN');
 
-      // Создаем заказ
+
       const orderResult = await client.query(
         'INSERT INTO orders (user_id, status) VALUES ($1, $2) RETURNING id',
         [userId, 'upcoming']
       );
       const orderId = orderResult.rows[0].id;
 
-      // Добавляем туры в заказ
+
       for (const item of items) {
         await client.query(
           'INSERT INTO order_tours (order_id, tour_id, date) VALUES ($1, $2, $3)',
@@ -329,7 +329,7 @@ app.post('/api/orders', authenticateToken, async (req, res) => {
   }
 });
 
-// Маршруты для пользователей
+
 app.get('/api/users/:id/tours/upcoming', authenticateToken, async (req, res) => {
   try {
     const { id } = req.params;
@@ -398,13 +398,13 @@ app.post('/api/users/:userId/tours/:tourId/complete', authenticateToken, isAdmin
   }
 });
 
-// Добавляем маршрут для обновления профиля
+
 app.put('/api/users/profile', authenticateToken, upload.single('avatar'), async (req, res) => {
   try {
     const { name, email, currentPassword, newPassword } = req.body;
     const userId = req.user.id;
 
-    // Получаем текущего пользователя
+
     const currentUser = await pool.query(
       'SELECT * FROM users WHERE id = $1',
       [userId]
@@ -416,7 +416,7 @@ app.put('/api/users/profile', authenticateToken, upload.single('avatar'), async 
 
     const user = currentUser.rows[0];
 
-    // Проверяем email на уникальность, если он изменился
+
     if (email !== user.email) {
       const emailExists = await pool.query(
         'SELECT * FROM users WHERE email = $1 AND id != $2',
@@ -428,38 +428,38 @@ app.put('/api/users/profile', authenticateToken, upload.single('avatar'), async 
       }
     }
 
-    // Формируем запрос на обновление
+
     let updateQuery = 'UPDATE users SET name = $1, email = $2';
     let queryParams = [name || user.name, email || user.email];
     let paramCount = 2;
 
-    // Если загружен новый аватар
+
     if (req.file) {
       paramCount++;
       updateQuery += `, avatar = $${paramCount}`;
       queryParams.push(`/images/avatars/${req.file.filename}`);
     }
 
-    // Если меняется пароль
+
     if (newPassword && currentPassword) {
-      // Проверяем текущий пароль
+
       const validPassword = await bcrypt.compare(currentPassword, user.password);
       if (!validPassword) {
         return res.status(400).json({ message: 'Неверный текущий пароль' });
       }
 
-      // Хешируем новый пароль
+
       const hashedPassword = await bcrypt.hash(newPassword, 10);
       paramCount++;
       updateQuery += `, password = $${paramCount}`;
       queryParams.push(hashedPassword);
     }
 
-    // Добавляем условие WHERE и RETURNING
+
     updateQuery += ` WHERE id = $${paramCount + 1} RETURNING id, name, email, avatar, role`;
     queryParams.push(userId);
 
-    // Выполняем обновление
+
     const result = await pool.query(updateQuery, queryParams);
     const updatedUser = result.rows[0];
 
@@ -478,7 +478,7 @@ app.put('/api/users/profile', authenticateToken, upload.single('avatar'), async 
   }
 });
 
-// Добавляем маршрут для изменения роли пользователя (только для админа)
+
 app.put('/api/users/:userId/role', authenticateToken, isAdmin, async (req, res) => {
   try {
     const { role } = req.body;
@@ -504,7 +504,7 @@ app.put('/api/users/:userId/role', authenticateToken, isAdmin, async (req, res) 
   }
 });
 
-// Добавляем маршрут для получения всех пользователей (только для админа)
+
 app.get('/api/users', authenticateToken, isAdmin, async (req, res) => {
   try {
     const result = await pool.query(
@@ -517,7 +517,7 @@ app.get('/api/users', authenticateToken, isAdmin, async (req, res) => {
   }
 });
 
-// Error handling middleware
+
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({ error: 'Внутренняя ошибка сервера' });

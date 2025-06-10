@@ -9,7 +9,7 @@ const pool = new Pool({
   database: process.env.DB_NAME
 });
 
-// Проверяем подключение
+
 pool.query('SELECT NOW()', (err, res) => {
   if (err) {
     console.error('Error connecting to the database:', err);

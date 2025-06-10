@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import api from '../../api/axios';
 import { config } from '../../config';
 
-// Load initial state from localStorage
+
 const loadState = () => {
   try {
     const serializedUser = localStorage.getItem('user');

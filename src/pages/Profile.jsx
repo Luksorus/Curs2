@@ -268,7 +268,7 @@ const Profile = () => {
 
   useEffect(() => {
     fetchOrders();
-    // Инициализируем форму данными пользователя
+    
     if (user) {
       const initialData = {
         name: user.name || '',
@@ -426,11 +426,11 @@ const Profile = () => {
             {user.avatar ? (
               <img src={getImageUrl(user.avatar)} alt={user.name} />
             ) : (
-              <div style={{
-                width: '100%',
-                height: '100%',
-                display: 'flex',
-                alignItems: 'center',
+              <div style={{ 
+                width: '100%', 
+                height: '100%', 
+                display: 'flex', 
+                alignItems: 'center', 
                 justifyContent: 'center',
                 fontSize: '3rem',
                 color: theme.colors.textLight
@@ -535,21 +535,21 @@ const Profile = () => {
                 {getRoleText(user.role)}
               </p>
               {(user.role === 'guide' || user.role === 'admin') && user.position && (
-                <p style={{ 
-                  color: theme.colors.text,
-                  marginBottom: '0.5rem'
-                }}>
+                    <p style={{ 
+                      color: theme.colors.text,
+                      marginBottom: '0.5rem'
+                    }}>
                   {user.position}
-                </p>
-              )}
+                    </p>
+                  )}
               {(user.role === 'guide' || user.role === 'admin') && user.description && (
-                <p style={{ 
-                  color: theme.colors.textLight,
+                    <p style={{ 
+                      color: theme.colors.textLight,
                   marginBottom: '1.5rem'
-                }}>
-                  {user.description}
-                </p>
-              )}
+                    }}>
+                      {user.description}
+                    </p>
+                  )}
               <Button onClick={() => setEditMode(true)}>
                 Редактировать профиль
               </Button>
@@ -558,44 +558,44 @@ const Profile = () => {
         </ProfileContent>
       </ProfileSection>
 
-      {/* Специфичный контент для гида */}
+      {}
       {user.role === 'guide' && (
         <GuideProfile />
       )}
 
-      {/* Заказы показываем для обычных пользователей */}
+      {}
       {user.role === 'user' && (
-        <OrdersSection>
-          <h3>Мои заказы</h3>
-          <OrdersList>
-            {loading ? (
-              <p style={{ textAlign: 'center', color: theme.colors.textLight }}>
-                Загрузка...
-              </p>
-            ) : orders.length > 0 ? (
-              orders.map(order => (
-                <OrderCard key={order.id}>
-                  <h4>{order.tour_name}</h4>
-                  <p className="date">
-                    Дата заказа: {formatDate(order.created_at)}
-                  </p>
-                  <p className="price">
-                    Стоимость: {order.total_price} ₽
-                  </p>
+      <OrdersSection>
+        <h3>Мои заказы</h3>
+        <OrdersList>
+          {loading ? (
+            <p style={{ textAlign: 'center', color: theme.colors.textLight }}>
+              Загрузка...
+            </p>
+          ) : orders.length > 0 ? (
+            orders.map(order => (
+              <OrderCard key={order.id}>
+                <h4>{order.tour_name}</h4>
+                <p className="date">
+                  Дата заказа: {formatDate(order.created_at)}
+                </p>
+                <p className="price">
+                  Стоимость: {order.total_price} ₽
+                </p>
                   <p>Статус: {getStatusText(order.status)}</p>
-                </OrderCard>
-              ))
-            ) : (
-              <p style={{ 
-                textAlign: 'center', 
-                color: theme.colors.textLight,
-                padding: '2rem'
-              }}>
-                У вас пока нет заказов
-              </p>
-            )}
-          </OrdersList>
-        </OrdersSection>
+              </OrderCard>
+            ))
+          ) : (
+            <p style={{ 
+              textAlign: 'center', 
+              color: theme.colors.textLight,
+              padding: '2rem'
+            }}>
+              У вас пока нет заказов
+            </p>
+          )}
+        </OrdersList>
+      </OrdersSection>
       )}
     </Container>
   );

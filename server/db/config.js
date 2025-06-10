@@ -7,10 +7,9 @@ const config = {
   host: process.env.DB_HOST || 'localhost',
   port: process.env.DB_PORT || 5432,
   database: process.env.DB_NAME || 'tour_company',
-  // Дополнительные параметры для улучшения производительности
-  max: 20, // максимальное количество клиентов в пуле
-  idleTimeoutMillis: 30000, // время простоя клиента
-  connectionTimeoutMillis: 2000, // время ожидания соединения
+  max: 20, 
+  idleTimeoutMillis: 30000, 
+  connectionTimeoutMillis: 2000, 
 };
 
 module.exports = config; 

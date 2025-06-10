@@ -126,7 +126,7 @@ const Navigation = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // Расширенный отладочный вывод
+  
   console.log('Current user:', user);
   console.log('Is user logged in?:', !!user);
   console.log('User role:', user?.role);

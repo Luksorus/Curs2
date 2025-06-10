@@ -378,13 +378,13 @@ const GuideProfile = () => {
     try {
       const response = await api.get(config.endpoints.tours.guideTours);
       
-      // Обрабатываем данные
+      
       const toursWithStats = response.data.map(tour => {
-        // Разделяем участников на активных и отмененных
+        
         const activeParticipants = tour.participants.filter(p => p.order_status !== 'cancelled');
         const cancelledParticipants = tour.participants.filter(p => p.order_status === 'cancelled');
         
-        // Считаем общее количество активных заказанных мест
+        
         const totalOrderedSlots = activeParticipants.reduce((sum, p) => sum + parseInt(p.order_count || 0), 0);
         
         return {
@@ -409,7 +409,7 @@ const GuideProfile = () => {
   };
 
   useEffect(() => {
-    fetchGuideTours();
+      fetchGuideTours();
   }, []);
 
   if (loading) {

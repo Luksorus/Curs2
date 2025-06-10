@@ -305,7 +305,8 @@ const TourDetails = () => {
       name: tour.name,
       price: tour.price,
       image: tour.image,
-      quantity
+      quantity,
+      available_slots: tour.available_slots
     }));
     navigate('/cart');
   };

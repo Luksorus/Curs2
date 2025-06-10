@@ -1,15 +1,15 @@
 export const theme = {
   colors: {
-    primary: '#FF9966', // Персиковый
-    primaryLight: '#FFB088', // Светлый персиковый
-    primaryDark: '#FF7733', // Темный персиковый
-    secondary: '#FFF3E0', // Очень светлый персиковый
-    accent: '#FF5722', // Яркий оранжевый
-    background: '#FFFFFF', // Белый
-    backgroundAlt: '#FFF8F5', // Очень светлый персиковый фон
-    text: '#333333', // Основной текст
-    textLight: '#666666', // Светлый текст
-    border: '#FFE0CC', // Границы
+    primary: '#FF9966', 
+    primaryLight: '#FFB088', 
+    primaryDark: '#FF7733', 
+    secondary: '#FFF3E0', 
+    accent: '#FF5722', 
+    background: '#FFFFFF', 
+    backgroundAlt: '#FFF8F5', 
+    text: '#333333', 
+    textLight: '#666666', 
+    border: '#FFE0CC', 
     success: '#4CAF50',
     error: '#f44336',
     warning: '#ff9800'

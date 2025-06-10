@@ -13,7 +13,7 @@ import AdminPanel from './components/admin/AdminPanel';
 import Cart from './pages/Cart';
 import PrivateRoute from './components/PrivateRoute';
 
-// Компонент для отладки состояния аутентификации
+
 const AuthDebugger = () => {
   const auth = useSelector((state) => state.auth);
   console.log('Current auth state:', {

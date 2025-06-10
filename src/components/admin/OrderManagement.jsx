@@ -5,10 +5,12 @@ import { getImageUrl } from '../../config';
 
 const Container = styled.div`
   padding: 2rem;
+  overflow-x: auto;
 `;
 
 const OrdersTable = styled.table`
   width: 100%;
+  min-width: 800px;
   border-collapse: collapse;
   background: white;
   border-radius: 8px;
@@ -19,12 +21,21 @@ const OrdersTable = styled.table`
     padding: 1rem;
     text-align: left;
     border-bottom: 1px solid #eee;
+    vertical-align: middle;
   }
 
   th {
     background: #f8f9fa;
     font-weight: 600;
     color: #333;
+    white-space: nowrap;
+  }
+
+  td {
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: normal;
   }
 
   tr:last-child td {
@@ -37,10 +48,12 @@ const OrdersTable = styled.table`
 `;
 
 const StatusBadge = styled.span`
+  display: inline-block;
   padding: 0.5rem 1rem;
   border-radius: 20px;
   font-size: 0.875rem;
   font-weight: 500;
+  white-space: nowrap;
 
   ${props => {
     switch (props.status) {
@@ -63,6 +76,7 @@ const Button = styled.button`
   cursor: pointer;
   font-weight: 500;
   margin-right: 0.5rem;
+  white-space: nowrap;
   
   ${props => {
     if (props.confirm) {
@@ -77,6 +91,11 @@ const Button = styled.button`
     background: #ccc;
     cursor: not-allowed;
   }
+
+  @media (max-width: 768px) {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.875rem;
+  }
 `;
 
 const TourImage = styled.img`
@@ -84,6 +103,14 @@ const TourImage = styled.img`
   height: 60px;
   object-fit: cover;
   border-radius: 4px;
+  flex-shrink: 0;
+`;
+
+const ActionCell = styled.td`
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  min-width: 200px;
 `;
 
 const OrderManagement = () => {
@@ -153,7 +180,7 @@ const OrderManagement = () => {
               <td>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                   <TourImage src={getImageUrl(order.tour_image)} alt={order.tour_name} />
-                  {order.tour_name}
+                  <span>{order.tour_name}</span>
                 </div>
               </td>
               <td>
@@ -170,7 +197,7 @@ const OrderManagement = () => {
                    order.status === 'cancelled' ? 'Отменен' : order.status}
                 </StatusBadge>
               </td>
-              <td>
+              <ActionCell>
                 {order.status === 'pending' && (
                   <>
                     <Button
@@ -195,7 +222,7 @@ const OrderManagement = () => {
                     Отменить
                   </Button>
                 )}
-              </td>
+              </ActionCell>
             </tr>
           ))}
         </tbody>

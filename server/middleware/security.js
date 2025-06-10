@@ -1,9 +1,9 @@
 const securityMiddleware = (req, res, next) => {
-  // Удаляем существующие заголовки CSP
+
   res.removeHeader('Content-Security-Policy');
   res.removeHeader('Content-Security-Policy-Report-Only');
 
-  // Устанавливаем новые заголовки безопасности
+
   res.setHeader(
     'Content-Security-Policy',
     [
@@ -23,7 +23,7 @@ const securityMiddleware = (req, res, next) => {
     ].join('; ')
   );
 
-  // Другие заголовки безопасности
+
   res.setHeader('X-Content-Type-Options', 'nosniff');
   res.setHeader('X-Frame-Options', 'SAMEORIGIN');
   res.setHeader('X-XSS-Protection', '1; mode=block');

@@ -4,13 +4,13 @@ const path = require('path');
 const bcrypt = require('bcryptjs');
 require('dotenv').config({ path: path.join(__dirname, '..', '.env') });
 
-// Импортируем конфигурацию базы данных
+
 const dbConfig = require('./db/config');
 const pool = new Pool(dbConfig);
 
 async function initializeDatabase() {
   try {
-    // Создаем директории для загрузки файлов
+
     const uploadsDir = path.join(__dirname, 'public', 'uploads');
     const toursImagesDir = path.join(uploadsDir, 'tours');
     const avatarsDir = path.join(uploadsDir, 'avatars');
@@ -22,13 +22,13 @@ async function initializeDatabase() {
       }
     });
 
-    // Применяем основную схему базы данных
+
     console.log('Применение основной схемы базы данных...');
     const schemaSQL = fs.readFileSync(path.join(__dirname, 'db', 'schema.sql'), 'utf8');
     await pool.query(schemaSQL);
     console.log('Схема базы данных успешно применена');
 
-    // Применяем миграции
+
     console.log('Применение миграций...');
     const migrationsSQL = fs.readFileSync(path.join(__dirname, 'db', 'migrations.sql'), 'utf8');
     await pool.query(migrationsSQL);

@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const pool = require('../db');
+const config = require('../config');
 
 const authenticateToken = async (req, res, next) => {
   const authHeader = req.headers['authorization'];
@@ -10,7 +11,7 @@ const authenticateToken = async (req, res, next) => {
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, config.jwt.secret);
     const result = await pool.query('SELECT * FROM users WHERE id = $1', [decoded.id]);
     
     if (result.rows.length === 0) {
