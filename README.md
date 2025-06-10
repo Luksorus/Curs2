@@ -102,17 +102,69 @@ npm run dev
 
 ```
 /
-├── src/                # Клиентский код
-│   ├── components/     # React компоненты
-│   ├── pages/         # Страницы
-│   ├── store/         # Redux store
-│   ├── api/           # API клиент
-│   └── styles/        # Стили
+tourism-project/
+├── src/
+│   ├── components/
+│   │   ├── admin/
+│   │   ├── cart/
+│   │   ├── profile/
+│   │   ├── Navigation.jsx
+│   │   ├── GuideProfile.jsx
+│   │   ├── TourCard.jsx
+│   │   ├── Layout.jsx
+│   │   ├── LetterAvatar.jsx
+│   │   └── PrivateRoute.jsx
+│   │
+│   ├── pages/
+│   │   ├── Home.jsx
+│   │   ├── Auth.jsx
+│   │   ├── Profile.jsx
+│   │   ├── Tours.jsx
+│   │   ├── TourDetails.jsx
+│   │   ├── Cart.jsx
+│   │   └── AdminPanel.jsx
+│   │
+│   ├── api/
+│   ├── store/
+│   ├── styles/
+│   ├── assets/
+│   ├── App.jsx
+│   ├── main.jsx
+│   ├── config.js
+│   ├── App.css
+│   └── index.css
 │
-└── server/            # Серверный код
-    ├── db/           # База данных
-    ├── routes/       # Маршруты API
-    ├── middleware/   # Middleware
-    └── public/       # Статические файлы
+├── server/
+│   ├── routes/
+│   ├── middleware/
+│   │   ├── auth.js
+│   │   ├── roles.js
+│   │   └── security.js
+│   │
+│   ├── db/
+│   │   ├── migrations.sql
+│   │   └── schema.sql
+│   │
+│   ├── public/
+│   │   └── images/
+│   │
+│   ├── create-db.js
+│   ├── init-db.js
+│   ├── index.js
+│   ├── db.js
+│   ├── config.js
+│   ├── package.json
+│   └── package-lock.json
+│
+├── .git/
+├── node_modules/
+├── .env
+├── .gitignore
+├── README.md
+├── package.json
+├── package-lock.json
+├── vite.config.js
+├── eslint.config.js
+└── index.html
 ```
 
